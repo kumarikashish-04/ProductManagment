@@ -1,17 +1,11 @@
 const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema(
+const quotationSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true
-    },
-
-    // Quotation reference if applicable
-    quotationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Quotation"
     },
 
     items: [
@@ -22,39 +16,34 @@ const orderSchema = new mongoose.Schema(
           required: true
         },
 
-        // Quantity in the ordered unit
+        // Quantity in the requested unit
         quantity: {
           type: mongoose.Decimal128,
           required: true
         },
 
-        // Unit in which quantity was ordered (e.g., "kg", "mL", "item")
+        // Unit in which quantity was requested
         unit: {
           type: String,
           enum: ["g", "kg", "mL", "L", "item"],
           required: true
         },
 
-        // Price per unit at time of order (in INR)
+        // Price per unit (in INR)
         pricePerUnit: {
           type: mongoose.Decimal128,
           required: true
         },
 
-        // Subtotal for this item (quantity * pricePerUnit)
+        // Subtotal for this item
         subtotal: {
           type: mongoose.Decimal128,
           required: true
-        },
-
-        // Converted quantity to base unit for inventory tracking
-        baseUnitQuantity: {
-          type: mongoose.Decimal128
         }
       }
     ],
 
-    // Subtotal before tax (in INR)
+    // Subtotal before tax
     subtotalAmount: {
       type: mongoose.Decimal128,
       required: true
@@ -66,29 +55,35 @@ const orderSchema = new mongoose.Schema(
       default: 0
     },
 
-    // Total amount including tax (in INR)
+    // Total with tax
     totalAmount: {
       type: mongoose.Decimal128,
       required: true
     },
 
-    // Order status: "quotation", "confirmed", "shipped", "delivered", "cancelled"
+    // Status: "pending", "accepted", "rejected", "converted_to_order"
     status: {
       type: String,
-      enum: ["quotation", "confirmed", "shipped", "delivered", "cancelled"],
-      default: "quotation"
+      enum: ["pending", "accepted", "rejected", "converted_to_order"],
+      default: "pending"
     },
 
-    // Notes/comments
+    // Notes from user
     notes: String,
 
-    // Delivery date
-    deliveryDate: Date,
+    // Admin notes/quote reference
+    adminNotes: String,
 
-    // Seller notes (for admin)
-    sellerNotes: String
+    // Quote validity date
+    validUntil: Date,
+
+    // If converted to order, reference to that order
+    orderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order"
+    }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Order", orderSchema);
+module.exports = mongoose.model("Quotation", quotationSchema);

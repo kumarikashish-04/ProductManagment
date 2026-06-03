@@ -1,54 +1,27 @@
 const express = require("express");
-
-const Product = require("../models/Product");
+const {
+  getProducts,
+  getProductById,
+  getProductPricing,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getCategories
+} = require("../controllers/productController");
 const auth = require("../middleware/auth");
 const role = require("../middleware/role");
 
 const router = express.Router();
 
-router.get("/", auth, async (req, res) => {
-  const products = await Product.find();
+// Public routes - products can be viewed by anyone
+router.get("/", getProducts);
+router.get("/categories", getCategories);
+router.get("/pricing/:id", getProductPricing);
+router.get("/:id", getProductById);
 
-  res.json(products);
-});
-
-router.post(
-  "/",
-  auth,
-  role("admin"),
-  async (req, res) => {
-    const product = await Product.create(req.body);
-
-    res.status(201).json(product);
-  }
-);
-
-router.put(
-  "/:id",
-  auth,
-  role("admin"),
-  async (req, res) => {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-
-    res.json(product);
-  }
-);
-
-router.delete(
-  "/:id",
-  auth,
-  role("admin"),
-  async (req, res) => {
-    await Product.findByIdAndDelete(req.params.id);
-
-    res.json({
-      message: "Deleted"
-    });
-  }
-);
+// Admin routes
+router.post("/", auth, role("admin"), createProduct);
+router.put("/:id", auth, role("admin"), updateProduct);
+router.delete("/:id", auth, role("admin"), deleteProduct);
 
 module.exports = router;

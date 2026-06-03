@@ -1,0 +1,142 @@
+.quotation-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.quotation-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.quotation-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.cart-items {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-name {
+  font-weight: 600;
+  color: var(--white);
+}
+
+.item-sku {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: monospace;
+}
+
+.item-unit select {
+  padding: 6px;
+  font-size: 13px;
+}
+
+.item-quantity input {
+  padding: 6px;
+  font-size: 13px;
+}
+
+.item-total {
+  font-weight: 600;
+  text-align: right;
+  color: var(--white);
+}
+
+.remove-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--red);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.remove-btn:hover {
+  background: var(--red);
+  color: white;
+}
+
+.summary-card {
+  position: sticky;
+  top: 90px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.summary-card h3 {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.summary-row.total {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.summary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.summary-actions .btn {
+  justify-content: center;
+  padding: 12px;
+}
+
+@media (max-width: 900px) {
+  .quotation-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .cart-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .item-total {
+    text-align: left;
+  }
+}

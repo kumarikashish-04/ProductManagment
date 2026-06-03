@@ -1,48 +1,29 @@
 const express = require("express");
-
-const Order = require("../models/Order");
-const Product = require("../models/Product");
-
+const {
+  createOrder,
+  getOrders,
+  getOrderById,
+  updateOrderStatus,
+  getOrderStats
+} = require("../controllers/orderController");
 const auth = require("../middleware/auth");
+const role = require("../middleware/role");
 
 const router = express.Router();
 
-router.post("/", auth, async (req, res) => {
-  try {
-    const { items } = req.body;
+// Create order
+router.post("/", auth, createOrder);
 
-    let total = 0;
+// Get all orders
+router.get("/", auth, getOrders);
 
-    for (const item of items) {
-      const product = await Product.findById(
-        item.product
-      );
+// Get order statistics (admin only)
+router.get("/stats", auth, role("admin"), getOrderStats);
 
-      total += product.price * item.quantity;
+// Get single order
+router.get("/:id", auth, getOrderById);
 
-      product.quantity -= item.quantity;
-
-      await product.save();
-    }
-
-    const order = await Order.create({
-      user: req.user.id,
-      items,
-      totalAmount: total
-    });
-
-    res.status(201).json(order);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
-router.get("/", auth, async (req, res) => {
-  const orders = await Order.find()
-    .populate("user")
-    .populate("items.product");
-
-  res.json(orders);
-});
+// Update order status (admin only)
+router.put("/:id/status", auth, role("admin"), updateOrderStatus);
 
 module.exports = router;
